@@ -55,6 +55,23 @@ function draw() {
       ctx.fillStyle = "lightblue";
     }
     ctx.strokeStyle = "white";
+
+    if (snake[i].x >= canvas.width) {
+      snake[i].x = 0;
+    }
+
+    if (snake[i].x < 0) {
+      snake[i].x = canvas.width - unit;
+    }
+
+    if (snake[i].y >= canvas.height) {
+      snake[i].y = 0;
+    }
+
+    if (snake[i].y < 0) {
+      snake[i].y = canvas.height - unit;
+    }
+
     ctx.fillRect(snake[i].x, snake[i].y, unit, unit);
     ctx.strokeRect(snake[i].x, snake[i].y, unit, unit);
   }
