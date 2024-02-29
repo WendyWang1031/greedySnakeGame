@@ -29,7 +29,19 @@ snake[3] = {
   y: 0,
 };
 
+window.addEventListener("keydown", changeDirection);
 let d = "Right";
+function changeDirection(e) {
+  if (e.key == "ArrowRight" && d != "Left") {
+    d = "Right";
+  } else if (e.key == "ArrowDown" && d != "Up") {
+    d = "Down";
+  } else if (e.key == "ArrowLeft" && d != "Right") {
+    d = "Left";
+  } else if (e.key == "ArrowUp" && d != "Down") {
+    d = "Up";
+  }
+}
 
 function draw() {
   //背景全設定為黑色
