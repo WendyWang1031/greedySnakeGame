@@ -7,17 +7,23 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <canvas
-      id="myCanvas"
-      width="320"
-      height="320"
-      style="background-color: black"
-    ></canvas>
-    <p id="myScore"></p>
-    <p id="myScore2"></p>
-    <button type="button" id="Start" onclick="location.reload()">
-      開始新遊戲
-    </button>
+    <div class="main-area">
+      <div class="button">
+        <p id="myScore"></p>
+        <p id="myScore2"></p>
+        <button type="button" id="Start" onclick="location.reload()">
+          重啟遊戲
+        </button>
+      </div>
+
+      <canvas
+        id="myCanvas"
+        width="320"
+        height="320"
+        style="background-color: rgb(255, 255, 255)"
+      ></canvas>
+    </div>
+
     <script src="./app.js"></script>
   </body>
 </html>

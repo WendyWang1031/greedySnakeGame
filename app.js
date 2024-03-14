@@ -106,16 +106,16 @@ function draw() {
   }
 
   //背景全設定為黑色
-  ctx.fillStyle = "black";
+  ctx.fillStyle = "wheat";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   myFruit.drawFruit();
   //畫出蛇
   for (let i = 0; i < snake.length; i++) {
     if (i == 0) {
-      ctx.fillStyle = "lightGreen";
+      ctx.fillStyle = "grey";
     } else {
-      ctx.fillStyle = "lightblue";
+      ctx.fillStyle = "lightgrey";
     }
     ctx.strokeStyle = "white";
 

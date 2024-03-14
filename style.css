@@ -5,35 +5,48 @@
 }
 
 body {
-  background-color: black;
+  background-color: rgb(255, 255, 255);
   display: flex;
   flex-direction: column;
   align-items: center;
+  div.main-area {
+    border: 1px dashed rgb(120, 120, 120);
+    padding: 2rem;
+    justify-content: center;
+    display: flexbox;
+    align-items: center;
+    div.button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      #myScore,
+      #myScore2 {
+        color: rgb(85, 85, 85);
+        font-size: 1.5rem;
+      }
+      button#Start {
+        padding: 0.25rem 0.5rem;
+        border-radius: 10px;
+        color: white;
+        background-color: rgb(180, 180, 180);
+        font-size: 1.15rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem;
+        transition: background-color 0.3s ease;
+      }
+      button#Start:hover {
+        background-color: rgb(41, 41, 41);
+      }
+    }
+  }
 }
 
 #myCanvas {
-  border: 5px solid lightgreen;
-  position: absolute;
+  border: 0.5rem solid rgb(115, 115, 115);
+  /* position: absolute;
   top: 60%;
   left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-#myScore {
-  margin-top: 1rem;
-}
-
-#myScore,
-#myScore2 {
-  color: white;
-  font-size: 1.5rem;
-  padding: 10px;
-}
-
-#Start {
-  padding: 0.25rem 0.5rem;
-  background-color: yellow;
-  font-size: 1.15rem;
-  display: block;
-  margin-top: 15px;
+  transform: translate(-50%, -50%); */
 }
