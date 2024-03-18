@@ -82,10 +82,20 @@ class Fruit {
 createSnake();
 let myFruit = new Fruit();
 
+//初始設定，宣告highestScore最高的分數、宣告score分數是0
+//呼叫載入最高分數的函式
+let highestScore;
+let score = 0;
+loadHighestScore();
+
 //事件監聽器，當用戶按下鍵盤後會執行changeDirection的函式
 //宣告d初始化為向右
 window.addEventListener("keydown", changeDirection);
 let d = "Right";
+
+//選取元素且使用innerHTML改變網頁文字：分數與最高分數的值
+document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
+document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore;
 
 function changeDirection(e) {
   //如果按下的箭頭是向右，而且蛇的當前方向不是向左，將蛇的方向設定為向右，以此類推
@@ -105,15 +115,12 @@ function changeDirection(e) {
   window.removeEventListener("keydown", changeDirection);
 }
 
-//初始設定，宣告highestScore最高的分數、宣告score分數是0
-//呼叫載入最高分數的函式
-let highestScore;
-let score = 0;
-loadHighestScore();
-
-//選取元素且使用innerHTML改變網頁文字：分數與最高分數的值
-document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
-document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore;
+//fillStyle決定了對矩形的填充樣式，背景全設定為燕麥色
+//fillRect填充矩形，前面兩個參數是開始點，寬高是由開頭你界定的欄列單位
+function drawCanvas() {
+  ctx.fillStyle = "wheat";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
 //繪製蛇、繪製水果都放進draw函式
 function draw() {
@@ -125,11 +132,8 @@ function draw() {
       return;
     }
   }
-
-  //fillStyle決定了對矩形的填充樣式，背景全設定為燕麥色
-  //fillRect填充矩形，前面兩個參數是開始點，寬高是由開頭你界定的欄列單位
-  ctx.fillStyle = "wheat";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  //呼叫繪製整面畫布
+  drawCanvas();
 
   //需叫myFruit這個變數裡面的drawFruit()函式，繪製水果
   myFruit.drawFruit();

@@ -19,12 +19,16 @@ body {
       display: flex;
       flex-direction: column;
       align-items: center;
+      h1 {
+        color: rgb(85, 85, 85);
+      }
       #myScore,
       #myScore2 {
         color: rgb(85, 85, 85);
         font-size: 1.5rem;
       }
-      button#Start {
+      button#Start,
+      button#allPageStart {
         padding: 0.25rem 0.5rem;
         border-radius: 10px;
         color: white;
@@ -33,7 +37,7 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 2rem;
+        margin: 1rem;
         transition: background-color 0.3s ease;
       }
       button#Start:hover {
