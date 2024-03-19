@@ -17,6 +17,10 @@ let snake = []; //array的每個元素都是一個物件
 document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
 document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore;
 
+const allPageStart = document.getElementById("allPageStart");
+const reStart = document.getElementById("reStart");
+reStart.style.display = "none";
+
 //物件的工作是：儲存身體的x,y座標
 //頭是[0]，擁有三節身體，以下是他的預設座標
 function createSnake() {
@@ -94,16 +98,14 @@ class Fruit {
   }
 }
 
-//事件監聽器，當用戶按下鍵盤後會執行changeDirection的函式
-//宣告d初始化為向右
-window.addEventListener("keydown", changeDirection);
-let d = "Right";
-
 function drawSnakeAndFruit() {
   //初始設定，創造蛇、創造新的隨機水果
   createSnake();
   let myFruit = new Fruit();
-
+  //事件監聽器，當用戶按下鍵盤後會執行changeDirection的函式
+  //宣告d初始化為向右
+  window.addEventListener("keydown", changeDirection);
+  let d = "Right";
   function changeDirection(e) {
     //如果按下的箭頭是向右，而且蛇的當前方向不是向左，將蛇的方向設定為向右，以此類推
     if (e.key == "ArrowRight" && d != "Left") {
@@ -213,12 +215,26 @@ function drawSnakeAndFruit() {
     snake.unshift(newHead);
     window.addEventListener("keydown", changeDirection);
   }
+  //宣告myGame使用setInterval每隔200毫秒調用draw這個函數，更新遊戲內部畫面
+  let myGame = setInterval(draw, 200);
 }
 
-//宣告myGame使用setInterval每隔200毫秒調用draw這個函數，更新遊戲內部畫面
-let myGame = setInterval(draw, 200);
+function resetGame() {
+  drawSnakeAndFruit();
+  score = 0;
+  document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
+  document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore;
+  reStart.removeEventListener("click", resetGame);
+}
+reStart.addEventListener("click", resetGame);
 
-function startGame() {}
+function startGame() {
+  drawSnakeAndFruit();
+  allPageStart.removeEventListener("click", drawSnakeAndFruit);
+  reStart.style.display = "inline";
+  allPageStart.style.display = "none";
+}
+allPageStart.addEventListener("click", startGame);
 //載入最高分數，如果儲存的highestScore是空值，設定值為0
 //不然就會是載入本地的highestScore值並轉為數字
 function loadHighestScore() {

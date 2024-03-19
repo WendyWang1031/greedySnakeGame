@@ -27,7 +27,19 @@ body {
         color: rgb(85, 85, 85);
         font-size: 1.5rem;
       }
-      button#Start,
+      button#reStart {
+        padding: 0.25rem 0.5rem;
+        border-radius: 10px;
+        color: rgb(118, 0, 0);
+        background-color: rgb(180, 180, 180);
+        font-size: 1.15rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0.5rem;
+        transition: background-color 0.3s ease;
+      }
+
       button#allPageStart {
         padding: 0.25rem 0.5rem;
         border-radius: 10px;
@@ -37,17 +49,22 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
-        margin: 1rem;
+        margin: 0.5rem;
         transition: background-color 0.3s ease;
       }
-      button#Start:hover {
+
+      button#allPageStart:hover {
         background-color: rgb(41, 41, 41);
+      }
+      button#reStart:hover {
+        background-color: rgb(216, 216, 216);
       }
     }
   }
 }
 
 #myCanvas {
+  margin: 1rem;
   border: 0.5rem solid rgb(115, 115, 115);
   /* position: absolute;
   top: 60%;
