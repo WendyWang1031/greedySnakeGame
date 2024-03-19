@@ -24,6 +24,7 @@ reStart.style.display = "none";
 //物件的工作是：儲存身體的x,y座標
 //頭是[0]，擁有三節身體，以下是他的預設座標
 function createSnake() {
+  snake = [];
   snake[0] = {
     x: 80,
     y: 0,
@@ -97,7 +98,14 @@ class Fruit {
     this.y = new_y;
   }
 }
-
+function isSnakeBitten() {
+  for (let i = 1; i < snake.length; i++) {
+    if (snake[i].x == snake[0].x && snake[i].y == snake[0].y) {
+      return true;
+    }
+  }
+  return false;
+}
 function drawSnakeAndFruit() {
   //初始設定，創造蛇、創造新的隨機水果
   createSnake();
@@ -127,12 +135,11 @@ function drawSnakeAndFruit() {
   //繪製蛇、繪製水果都放進draw函式
   function draw() {
     //每次畫圖之前，確認蛇有沒有咬到自己
-    for (let i = 1; i < snake.length; i++) {
-      if (snake[i].x == snake[0].x && snake[i].y == snake[0].y) {
-        clearInterval(myGame);
-        alert("Game Over");
-        return;
-      }
+    if (isSnakeBitten()) {
+      alert("Game over");
+      // reStart.disabled = false;
+      clearInterval(myGame);
+      return;
     }
     //呼叫繪製整面畫布
     drawCanvas();
@@ -220,16 +227,22 @@ function drawSnakeAndFruit() {
 }
 
 function resetGame() {
-  drawSnakeAndFruit();
+  clearInterval(startGame());
+  console.log("Interval cleared.");
+  createSnake();
+  d = "Right";
   score = 0;
   document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
-  document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore;
-  reStart.removeEventListener("click", resetGame);
+  // reStart.disabled = false;
 }
 reStart.addEventListener("click", resetGame);
 
 function startGame() {
   drawSnakeAndFruit();
+  score = 0;
+  loadHighestScore();
+  document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
+  document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore;
   allPageStart.removeEventListener("click", drawSnakeAndFruit);
   reStart.style.display = "inline";
   allPageStart.style.display = "none";
