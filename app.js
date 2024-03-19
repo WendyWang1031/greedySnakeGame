@@ -20,7 +20,7 @@ document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore
 const allPageStart = document.getElementById("allPageStart");
 const reStart = document.getElementById("reStart");
 reStart.style.display = "none";
-
+let stopIntervalId;
 //物件的工作是：儲存身體的x,y座標
 //頭是[0]，擁有三節身體，以下是他的預設座標
 function createSnake() {
@@ -138,7 +138,7 @@ function drawSnakeAndFruit() {
     if (isSnakeBitten()) {
       alert("Game over");
       // reStart.disabled = false;
-      clearInterval(myGame);
+      clearInterval(stopIntervalId);
       return;
     }
     //呼叫繪製整面畫布
@@ -223,19 +223,14 @@ function drawSnakeAndFruit() {
     window.addEventListener("keydown", changeDirection);
   }
   //宣告myGame使用setInterval每隔200毫秒調用draw這個函數，更新遊戲內部畫面
-  let myGame = setInterval(draw, 200);
+  stopIntervalId = setInterval(draw, 200);
 }
 
-function resetGame() {
-  clearInterval(startGame());
-  console.log("Interval cleared.");
-  createSnake();
-  d = "Right";
-  score = 0;
-  document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
-  // reStart.disabled = false;
+function reStartGame() {
+  clearInterval(stopIntervalId);
+  startGame();
 }
-reStart.addEventListener("click", resetGame);
+reStart.addEventListener("click", reStartGame);
 
 function startGame() {
   drawSnakeAndFruit();
@@ -243,11 +238,12 @@ function startGame() {
   loadHighestScore();
   document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
   document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore;
-  allPageStart.removeEventListener("click", drawSnakeAndFruit);
+  allPageStart.removeEventListener("click", startGame);
   reStart.style.display = "inline";
   allPageStart.style.display = "none";
 }
 allPageStart.addEventListener("click", startGame);
+
 //載入最高分數，如果儲存的highestScore是空值，設定值為0
 //不然就會是載入本地的highestScore值並轉為數字
 function loadHighestScore() {
