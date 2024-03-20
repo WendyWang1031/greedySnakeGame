@@ -1,29 +1,32 @@
-const canvas = document.getElementById("myCanvas");
-const ctx = canvas.getContext("2d");
 //getContext() method會回傳一個canvas的drawing context
 //drawing context可以用來在canvas內畫圖
-//設定單位是20，需告欄列，並且界定出寬高裡面有多少欄列
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d");
+//設定單位是20，並且界定出寬高裡面有多少欄列
 const unit = 20;
 const row = canvas.height / unit; // 320/20=16
 const column = canvas.width / unit; // 320/20=16
-//初始設定，宣告highestScore最高的分數、宣告score分數是0
-//呼叫載入最高分數的函式
+
+//初始設定
+//宣告蛇是空陣列，array的每個元素都是一個物件
+let snake = [];
+//宣告時間計時器的id變數
+let stopIntervalId;
+//宣告highestScore最高的分數、宣告score分數是0，呼叫載入最高分數的函式
 let highestScore;
 let score = 0;
 loadHighestScore();
-let snake = []; //array的每個元素都是一個物件
 
-//選取元素且使用innerHTML改變網頁文字：分數與最高分數的值
+//宣告變數去抓取HTML元素
 const myScore = document.getElementById("myScore");
 const myScore2 = document.getElementById("myScore2");
-myScore.innerHTML = "遊戲分數：" + score;
-myScore2.innerHTML = "最高分數：" + highestScore;
-
 const allPageStart = document.getElementById("allPageStart");
 const reStart = document.getElementById("reStart");
-reStart.style.display = "none";
 
-let stopIntervalId;
+//讓重啟遊戲按鈕不顯現、將分數顯現在頁面
+reStart.style.display = "none";
+updateScoreAndHighestScore();
+
 //物件的工作是：儲存身體的x,y座標
 //頭是[0]，擁有三節身體，以下是他的預設座標
 function createSnake() {
@@ -56,7 +59,7 @@ function drawCanvas() {
 }
 drawCanvas();
 
-//這個class方法有drawFruit、pickALocation兩個函式能呼叫
+//class兩個方法方法有drawFruit、pickALocation兩個函式能呼叫
 class Fruit {
   //建構自動調用方法：利用隨機整數方式生成x,y座標的位置
   constructor() {
@@ -73,15 +76,15 @@ class Fruit {
     //宣告overlapping用於標記新生成的水果位置是否和蛇"身體"重疊，預設沒有重疊
     //需告新的x,y軸
     let overlapping = false;
-    let new_x;
-    let new_y;
+    let newFruit_x;
+    let newFruit_y;
 
-    //定義一個內部函式checkOverlap確認蛇身是否有重疊
-    function checkOverlap(new_x, new_y) {
+    //定義內部函式checkOverlap確認蛇身是否有重疊
+    function checkOverlap(newFruit_x, newFruit_y) {
       //利用迴圈去尋遍蛇的x,y軸座標是否跟新的水果座標一樣，
       //如果有重疊就把overlapping設定為true
       for (let i = 0; i < snake.length; i++) {
-        if (new_x == snake[i].x && new_y == snake[i].y) {
+        if (newFruit_x == snake[i].x && newFruit_y == snake[i].y) {
           overlapping = true;
           return;
         } else {
@@ -91,14 +94,15 @@ class Fruit {
     }
 
     //利用do-while迴圈來重複生成新的位置，條件是overlapping的值是true
+    //第幾欄列的整數乘上單位即是座標數字
     do {
-      new_x = Math.floor(Math.random() * column) * unit;
-      new_y = Math.floor(Math.random() * row) * unit;
+      newFruit_x = Math.floor(Math.random() * column) * unit;
+      newFruit_y = Math.floor(Math.random() * row) * unit;
     } while (overlapping);
 
-    //定義現在的x,y軸是新的
-    this.x = new_x;
-    this.y = new_y;
+    //現在的x,y軸存放新的資料
+    this.x = newFruit_x;
+    this.y = newFruit_y;
   }
 }
 function isSnakeBitten() {
@@ -146,7 +150,7 @@ function drawSnakeAndFruit() {
     //呼叫繪製整面畫布
     drawCanvas();
 
-    //需叫myFruit這個變數裡面的drawFruit()函式，繪製水果
+    //需叫myFruit裡的drawFruit()函式，繪製水果
     myFruit.drawFruit();
 
     //畫出初始蛇的顏色，第0個頭位置是深灰色、其餘是淺灰色
@@ -221,7 +225,7 @@ function drawSnakeAndFruit() {
     snake.unshift(newHead);
     window.addEventListener("keydown", changeDirection);
   }
-  //宣告myGame使用setInterval每隔200毫秒調用draw這個函數，更新遊戲內部畫面
+  //宣告stopIntervalId使用setInterval每隔200毫秒調用draw這個函數，更新遊戲內部畫面
   stopIntervalId = setInterval(draw, 200);
 }
 
@@ -247,8 +251,8 @@ function startGame() {
 }
 allPageStart.addEventListener("click", startGame);
 
-//載入最高分數，如果儲存的highestScore是空值，設定值為0
-//不然就會是載入本地的highestScore值並轉為數字
+//載入最高分數，如果”讀取、取出“儲存的highestScore是空值，設定 值為0
+//否則就會是讀取儲存的highestScore值並轉為數字
 function loadHighestScore() {
   if (localStorage.getItem("highestScore") == null) {
     highestScore = 0;
@@ -257,7 +261,7 @@ function loadHighestScore() {
   }
 }
 
-//使用localStorage.setItem將當前分數儲存在本地，名字叫highestScore
+//如果當前分數大於最高分數，使用”更新、存入“將當前分數儲存在本地，名字叫highestScore
 function setHighestScore(score) {
   if (score > highestScore) {
     localStorage.setItem("highestScore", score);
