@@ -14,12 +14,15 @@ loadHighestScore();
 let snake = []; //array的每個元素都是一個物件
 
 //選取元素且使用innerHTML改變網頁文字：分數與最高分數的值
-document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
-document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore;
+const myScore = document.getElementById("myScore");
+const myScore2 = document.getElementById("myScore2");
+myScore.innerHTML = "遊戲分數：" + score;
+myScore2.innerHTML = "最高分數：" + highestScore;
 
 const allPageStart = document.getElementById("allPageStart");
 const reStart = document.getElementById("reStart");
 reStart.style.display = "none";
+
 let stopIntervalId;
 //物件的工作是：儲存身體的x,y座標
 //頭是[0]，擁有三節身體，以下是他的預設座標
@@ -137,7 +140,6 @@ function drawSnakeAndFruit() {
     //每次畫圖之前，確認蛇有沒有咬到自己
     if (isSnakeBitten()) {
       alert("Game over");
-      // reStart.disabled = false;
       clearInterval(stopIntervalId);
       return;
     }
@@ -205,15 +207,12 @@ function drawSnakeAndFruit() {
     if (snake[0].x == myFruit.x && snake[0].y == myFruit.y) {
       //重新選定一個新的隨機位
       myFruit.pickALocation();
-
       //更新分數
       score++;
       //更新最高的分數
       setHighestScore(score);
       //更新網頁介面上的分數
-      document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
-      document.getElementById("myScore2").innerHTML =
-        "最高分數：" + highestScore;
+      updateScoreAndHighestScore();
     } else {
       //用來移除蛇身體最後一節，模擬蛇的移動
       snake.pop();
@@ -226,6 +225,11 @@ function drawSnakeAndFruit() {
   stopIntervalId = setInterval(draw, 200);
 }
 
+function updateScoreAndHighestScore() {
+  myScore.innerHTML = "遊戲分數：" + score;
+  myScore2.innerHTML = "最高分數：" + highestScore;
+}
+
 function reStartGame() {
   clearInterval(stopIntervalId);
   startGame();
@@ -236,8 +240,7 @@ function startGame() {
   drawSnakeAndFruit();
   score = 0;
   loadHighestScore();
-  document.getElementById("myScore").innerHTML = "遊戲分數：" + score;
-  document.getElementById("myScore2").innerHTML = "最高分數：" + highestScore;
+  updateScoreAndHighestScore();
   allPageStart.removeEventListener("click", startGame);
   reStart.style.display = "inline";
   allPageStart.style.display = "none";
