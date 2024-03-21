@@ -108,6 +108,13 @@ class Fruit {
 function isSnakeBitten() {
   for (let i = 1; i < snake.length; i++) {
     if (snake[i].x == snake[0].x && snake[i].y == snake[0].y) {
+      let canvasBorder = document.getElementById("myCanvas");
+      canvasBorder.style.border = "5px solid rgb(210,135,135)";
+      setTimeout(() => {
+        clearInterval(stopIntervalId);
+        alert("Game over");
+      }, 50);
+
       return true;
     }
   }
@@ -142,11 +149,7 @@ function drawSnakeAndFruit() {
   //繪製蛇、繪製水果都放進draw函式
   function draw() {
     //每次畫圖之前，確認蛇有沒有咬到自己
-    if (isSnakeBitten()) {
-      alert("Game over");
-      clearInterval(stopIntervalId);
-      return;
-    }
+    isSnakeBitten();
     //呼叫繪製整面畫布
     drawCanvas();
 
