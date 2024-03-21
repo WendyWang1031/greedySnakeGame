@@ -59,7 +59,7 @@ function drawCanvas() {
 }
 drawCanvas();
 
-//class兩個方法方法有drawFruit、pickALocation兩個函式能呼叫
+//class兩個方法有drawFruit、pickALocation兩個函式能呼叫
 class Fruit {
   //建構自動調用方法：利用隨機整數方式生成x,y座標的位置
   constructor() {
@@ -150,7 +150,7 @@ function drawSnakeAndFruit() {
     //呼叫繪製整面畫布
     drawCanvas();
 
-    //需叫myFruit裡的drawFruit()函式，繪製水果
+    //呼叫myFruit裡的drawFruit()函式，繪製水果
     myFruit.drawFruit();
 
     //畫出初始蛇的顏色，第0個頭位置是深灰色、其餘是淺灰色
@@ -188,7 +188,7 @@ function drawSnakeAndFruit() {
     }
 
     //以目前的d變數方向，來決定蛇的下一幀
-    //snake[0]是一個物件，但snake[0].x是個number，各自宣告蛇的頭部的x,y座標變數
+    //snake[0]是一個物件，snake[0].x是個number，各自宣告蛇的頭部的x,y座標變數
     //往上是y軸減單位，往右是x軸加單位...以此類推
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
@@ -206,16 +206,12 @@ function drawSnakeAndFruit() {
       x: snakeX,
       y: snakeY,
     };
-    //確認蛇是否有吃到果實、
+    //確認蛇是否有吃到果實
     //有的話，水果會重新隨機出現、更新分數、最高分數、介面數字
     if (snake[0].x == myFruit.x && snake[0].y == myFruit.y) {
-      //重新選定一個新的隨機位
       myFruit.pickALocation();
-      //更新分數
       score++;
-      //更新最高的分數
       setHighestScore(score);
-      //更新網頁介面上的分數
       updateScoreAndHighestScore();
     } else {
       //用來移除蛇身體最後一節，模擬蛇的移動
@@ -241,13 +237,13 @@ function reStartGame() {
 reStart.addEventListener("click", reStartGame);
 
 function startGame() {
-  drawSnakeAndFruit();
   score = 0;
+  drawSnakeAndFruit();
   loadHighestScore();
   updateScoreAndHighestScore();
   allPageStart.removeEventListener("click", startGame);
-  reStart.style.display = "inline";
   allPageStart.style.display = "none";
+  reStart.style.display = "inline";
 }
 allPageStart.addEventListener("click", startGame);
 
