@@ -1,34 +1,28 @@
-//getContext() method會回傳一個canvas的drawing context
-//drawing context可以用來在canvas內畫圖
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
-//設定單位是20，並且界定出寬高裡面有多少欄列
 const unit = 20;
-const row = canvas.height / unit; // 320/20=16
-const column = canvas.width / unit; // 320/20=16
+const row = canvas.height / unit;
+const column = canvas.width / unit;
 
 //初始設定
-//宣告蛇是空陣列，array的每個元素都是一個物件
 let snake = [];
-//宣告時間計時器的id變數
 let stopIntervalId;
-//宣告highestScore最高的分數、宣告score分數是0，呼叫載入最高分數的函式
 let highestScore;
 let score = 0;
 loadHighestScore();
 
-//宣告變數去抓取HTML元素
+//宣告變數抓取HTML元素
 const myScore = document.getElementById("myScore");
 const myScore2 = document.getElementById("myScore2");
 const allPageStart = document.getElementById("allPageStart");
 const reStart = document.getElementById("reStart");
 
-//讓重啟遊戲按鈕不顯現、將分數顯現在頁面
-reStart.style.display = "none";
 updateScoreAndHighestScore();
+reStart.style.display = "none";
+reStart.addEventListener("click", reStartGame);
+allPageStart.addEventListener("click", startGame);
 
-//物件的工作是：儲存身體的x,y座標
-//頭是[0]，擁有三節身體，以下是他的預設座標
+//蛇的初始資料
 function createSnake() {
   snake = [];
   snake[0] = {
@@ -51,38 +45,30 @@ function createSnake() {
     y: 0,
   };
 }
-//fillStyle決定了對矩形的填充樣式，背景全設定為燕麥色
-//fillRect填充矩形，前面兩個參數是開始點，寬高是由開頭你界定的欄列單位
-function drawCanvas() {
+
+function drawBackguond() {
   ctx.fillStyle = "wheat";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
-drawCanvas();
+drawBackguond();
 
-//class兩個方法有drawFruit、pickALocation兩個函式能呼叫
+//創建水果的資料與方法
 class Fruit {
-  //建構自動調用方法：利用隨機整數方式生成x,y座標的位置
   constructor() {
     this.x = Math.floor(Math.random() * column) * unit;
     this.y = Math.floor(Math.random() * row) * unit;
   }
-  //在畫布上繪製水果，填充顏色為黃色，利用fillRect隨機x,y座標新增一個方形水果
   drawFruit() {
     ctx.fillStyle = "yellow";
     ctx.fillRect(this.x, this.y, unit, unit);
   }
 
   pickALocation() {
-    //宣告overlapping用於標記新生成的水果位置是否和蛇"身體"重疊，預設沒有重疊
-    //需告新的x,y軸
     let overlapping = false;
     let newFruit_x;
     let newFruit_y;
 
-    //定義內部函式checkOverlap確認蛇身是否有重疊
     function checkOverlap(newFruit_x, newFruit_y) {
-      //利用迴圈去尋遍蛇的x,y軸座標是否跟新的水果座標一樣，
-      //如果有重疊就把overlapping設定為true
       for (let i = 0; i < snake.length; i++) {
         if (newFruit_x == snake[i].x && newFruit_y == snake[i].y) {
           overlapping = true;
@@ -93,18 +79,16 @@ class Fruit {
       }
     }
 
-    //利用do-while迴圈來重複生成新的位置，條件是overlapping的值是true
-    //第幾欄列的整數乘上單位即是座標數字
     do {
       newFruit_x = Math.floor(Math.random() * column) * unit;
       newFruit_y = Math.floor(Math.random() * row) * unit;
     } while (overlapping);
 
-    //現在的x,y軸存放新的資料
     this.x = newFruit_x;
     this.y = newFruit_y;
   }
 }
+//蛇是否咬到自己
 function isSnakeBitten() {
   for (let i = 1; i < snake.length; i++) {
     if (snake[i].x == snake[0].x && snake[i].y == snake[0].y) {
@@ -120,16 +104,15 @@ function isSnakeBitten() {
   }
   return false;
 }
+
+//創造蛇、隨機水果、設定方向
 function drawSnakeAndFruit() {
-  //初始設定，創造蛇、創造新的隨機水果
   createSnake();
   let myFruit = new Fruit();
-  //事件監聽器，當用戶按下鍵盤後會執行changeDirection的函式
-  //宣告d初始化為向右
-  window.addEventListener("keydown", changeDirection);
   let d = "Right";
+  window.addEventListener("keydown", changeDirection);
+
   function changeDirection(e) {
-    //如果按下的箭頭是向右，而且蛇的當前方向不是向左，將蛇的方向設定為向右，以此類推
     if (e.key == "ArrowRight" && d != "Left") {
       d = "Right";
     } else if (e.key == "ArrowDown" && d != "Up") {
@@ -139,21 +122,13 @@ function drawSnakeAndFruit() {
     } else if (e.key == "ArrowUp" && d != "Down") {
       d = "Up";
     }
-
-    //每次按下上下左右鍵之後，在下一幀被畫出來之前，
-    //不接受任何keydown事件
-    //這樣可以防止連續按鍵導致蛇在邏輯上自殺
     window.removeEventListener("keydown", changeDirection);
   }
 
-  //繪製蛇、繪製水果都放進draw函式
+  //畫出蛇、水果
   function draw() {
-    //每次畫圖之前，確認蛇有沒有咬到自己
     isSnakeBitten();
-    //呼叫繪製整面畫布
-    drawCanvas();
-
-    //呼叫myFruit裡的drawFruit()函式，繪製水果
+    drawBackguond();
     myFruit.drawFruit();
 
     //畫出初始蛇的顏色，第0個頭位置是深灰色、其餘是淺灰色
@@ -228,17 +203,13 @@ function drawSnakeAndFruit() {
   stopIntervalId = setInterval(draw, 200);
 }
 
+//顯示現在分數、最高分數
 function updateScoreAndHighestScore() {
   myScore.innerHTML = "遊戲分數：" + score;
   myScore2.innerHTML = "最高分數：" + highestScore;
 }
 
-function reStartGame() {
-  clearInterval(stopIntervalId);
-  startGame();
-}
-reStart.addEventListener("click", reStartGame);
-
+//開始遊戲
 function startGame() {
   score = 0;
   drawSnakeAndFruit();
@@ -248,10 +219,13 @@ function startGame() {
   allPageStart.style.display = "none";
   reStart.style.display = "inline";
 }
-allPageStart.addEventListener("click", startGame);
+//重啟遊戲
+function reStartGame() {
+  clearInterval(stopIntervalId);
+  startGame();
+}
 
-//載入最高分數，如果”讀取、取出“儲存的highestScore是空值，設定 值為0
-//否則就會是讀取儲存的highestScore值並轉為數字
+//載入最高分數
 function loadHighestScore() {
   if (localStorage.getItem("highestScore") == null) {
     highestScore = 0;
@@ -260,7 +234,7 @@ function loadHighestScore() {
   }
 }
 
-//如果當前分數大於最高分數，使用”更新、存入“將當前分數儲存在本地，名字叫highestScore
+//存取最高分數
 function setHighestScore(score) {
   if (score > highestScore) {
     localStorage.setItem("highestScore", score);
